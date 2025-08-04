@@ -115,11 +115,15 @@ router.put(
       });
 
       if (!subscription) {
-        throw new AppError("Subscription not found", 404, "not-found");
+        throw new AppError("Subscription not found", 404, "subscription-not-found");
       }
 
+        type SubscriptionUpdateFields = {
+        status?: string;
+        lotSize?: number;
+      };
   
-      const updateFields: any = {};
+      const updateFields: SubscriptionUpdateFields = {};
       if (status) updateFields.status = status;
       if (lotSize) updateFields.lotSize = lotSize;
 
@@ -134,6 +138,8 @@ router.put(
         id: updatedSubscription!._id,
       };
       delete transformed._id;
+      delete (transformed as any).__v;
+      
       res.status(200).json({
         status: "success",
         message: "Subscription updated successfully",
